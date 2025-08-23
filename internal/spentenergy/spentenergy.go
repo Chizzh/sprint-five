@@ -1,6 +1,7 @@
 package spentenergy
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -14,16 +15,58 @@ const (
 
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	// TODO: реализовать функцию
+	if steps <= 0 {
+		return 0, fmt.Errorf("invalid number of steps: %d (must be greater than 0)", steps)
+	}
+	if weight <= 0 {
+		return 0, fmt.Errorf("invalid weight: %.2f (must be greater than 0)", weight)
+	}
+	if height <= 0 {
+		return 0, fmt.Errorf("invalid height: %.2f (must be greater than 0)", height)
+	}
+	if duration <= 0 {
+		return 0, fmt.Errorf("invalid duration: %d (must be greater than 0)", duration)
+	}
+	meanSpeed := MeanSpeed(steps, height, duration)
+	durationInMinutes := duration.Minutes()
+	calories := ((weight * meanSpeed * durationInMinutes) / minInH) * walkingCaloriesCoefficient
+	return calories, nil
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	// TODO: реализовать функцию
+	if steps <= 0 {
+		return 0, fmt.Errorf("invalid number of steps: %d (must be greater than 0)", steps)
+	}
+	if weight <= 0 {
+		return 0, fmt.Errorf("invalid weight: %.2f (must be greater than 0)", weight)
+	}
+	if height <= 0 {
+		return 0, fmt.Errorf("invalid height: %.2f (must be greater than 0)", height)
+	}
+	if duration <= 0 {
+		return 0, fmt.Errorf("invalid duration: %d (must be greater than 0)", duration)
+	}
+	meanSpeed := MeanSpeed(steps, height, duration)
+	durationInMinutes := duration.Minutes()
+	calories := (weight * meanSpeed * durationInMinutes) / minInH
+	return calories, nil
 }
 
 func MeanSpeed(steps int, height float64, duration time.Duration) float64 {
 	// TODO: реализовать функцию
+	if duration <= 0 {
+		return 0
+	}
+	distance := Distance(steps, height)
+	durationHours := duration.Hours()
+	meanSpeed := distance / durationHours
+	return meanSpeed
 }
 
 func Distance(steps int, height float64) float64 {
 	// TODO: реализовать функцию
+	stepLength := height * stepLengthCoefficient
+	distance := (float64(steps) * stepLength) / float64(mInKm)
+	return distance
 }
